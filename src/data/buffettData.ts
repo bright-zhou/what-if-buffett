@@ -9,7 +9,7 @@ import type { YearData } from '../types';
  * Values are decimal returns:
  *   23.7% → 0.237,  -11.5% → -0.115
  */
-export const YEARS: YearData[] = [
+export const YEARS: readonly YearData[] = [
   { year: 1965, buffettReturn: 0.237, sp500Return: 0.100 },
   { year: 1966, buffettReturn: -0.115, sp500Return: -0.117 },
   { year: 1967, buffettReturn: 0.319, sp500Return: 0.309 },
