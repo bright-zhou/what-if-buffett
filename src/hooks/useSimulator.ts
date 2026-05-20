@@ -34,7 +34,7 @@ export function useSimulator() {
     const stats = calculateStats(buffettReturns, sp500Returns, userReturn, INITIAL_ASSET, NUM_YEARS);
 
     return {
-      years: [...YEARS] as SimulationResult['years'],
+      years: [...YEARS],
       userReturn,
       buffettAsset: buffettAssets.slice(1),
       sp500Asset: sp500Assets.slice(1),
