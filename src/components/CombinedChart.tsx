@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer,
@@ -98,6 +98,19 @@ export function CombinedChart({
   } | null>(null);
   const currentValueRef = useRef(0);
 
+  // Refs for document-level event listeners so they can be cleaned up on unmount
+  const mouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
+  const mouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
+
+  // Cleanup document-level listeners on unmount (prevents leak if component
+  // unmounts while a drag is in progress)
+  useEffect(() => {
+    return () => {
+      if (mouseMoveRef.current) document.removeEventListener('mousemove', mouseMoveRef.current);
+      if (mouseUpRef.current) document.removeEventListener('mouseup', mouseUpRef.current);
+    };
+  }, []);
+
   const handleDragStart = useCallback((index: number, clientY: number) => {
     const initialReturn = userReturn[index];
     currentValueRef.current = initialReturn;
@@ -126,7 +139,12 @@ export function CombinedChart({
       setDragIndex(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      mouseMoveRef.current = null;
+      mouseUpRef.current = null;
     };
+
+    mouseMoveRef.current = handleMouseMove;
+    mouseUpRef.current = handleMouseUp;
 
     // Attach listeners to document to track drag across the entire page.
     document.addEventListener('mousemove', handleMouseMove);
