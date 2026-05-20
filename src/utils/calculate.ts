@@ -12,6 +12,7 @@ export function calculateCAGR(initialValue: number, finalValue: number, years: n
 }
 
 export function calculateMaxDrawdown(assetCurve: number[]): number {
+  if (assetCurve.length === 0) return 0;
   let peak = assetCurve[0];
   let maxDrawdown = 0;
   for (const value of assetCurve) {
