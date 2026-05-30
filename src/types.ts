@@ -7,10 +7,10 @@ export interface YearData {
 }
 
 export interface Stats {
-  finalAssets: [number, number, number]; // [buffett, sp500, user]
-  cagr: [number, number, number];        // [buffett, sp500, user]
-  winRate: [number, number, number];     // [buffett, sp500, user]
-  maxDrawdown: [number, number, number]; // [buffett, sp500, user]
+  finalAssets: [number, number, number]; // [sp500, buffett, user]
+  cagr: [number, number, number];        // [sp500, buffett, user]
+  winRate: [number, number, number];     // [sp500, buffett, user]
+  maxDrawdown: [number, number, number]; // [sp500, buffett, user]
 }
 
 export interface SimulationResult {

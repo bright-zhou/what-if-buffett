@@ -1,8 +1,11 @@
+import { useLang } from '../i18n/LanguageContext';
+
 export function Legend() {
+  const { t } = useLang();
   const items = [
-    { color: '#3b82f6', label: '巴菲特实际' },
-    { color: '#64748b', label: '标普500' },
-    { color: '#f59e0b', label: '你的假设' },
+    { color: '#3b82f6', label: t('legend.buffett') },
+    { color: '#64748b', label: t('legend.sp500') },
+    { color: '#f59e0b', label: t('legend.user') },
   ];
   return (
     <div style={{ display: 'flex', gap: 20, justifyContent: 'center', padding: '8px 0' }}>

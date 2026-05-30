@@ -9,3 +9,25 @@ body {
 }
 
 #root { min-height: 100vh; }
+
+@keyframes pulseGreen {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); color: #4ade80; }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulseRed {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); color: #f87171; }
+  100% { transform: scale(1); }
+}
+
+.bar-rect {
+  opacity: 0.8;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+
+.bar-rect:hover {
+  opacity: 1;
+  filter: brightness(1.2);
+}

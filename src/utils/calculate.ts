@@ -45,20 +45,20 @@ export function calculateStats(
   const userFinal = userAssets[userAssets.length - 1];
 
   return {
-    finalAssets: [buffettFinal, sp500Final, userFinal] as [number, number, number],
+    finalAssets: [sp500Final, buffettFinal, userFinal] as [number, number, number],
     cagr: [
-      calculateCAGR(initialAsset, buffettFinal, years),
       calculateCAGR(initialAsset, sp500Final, years),
+      calculateCAGR(initialAsset, buffettFinal, years),
       calculateCAGR(initialAsset, userFinal, years),
     ] as [number, number, number],
     winRate: [
-      calculateWinRate(buffettReturns),
       calculateWinRate(sp500Returns),
+      calculateWinRate(buffettReturns),
       calculateWinRate(userReturns),
     ] as [number, number, number],
     maxDrawdown: [
-      calculateMaxDrawdown(buffettAssets),
       calculateMaxDrawdown(sp500Assets),
+      calculateMaxDrawdown(buffettAssets),
       calculateMaxDrawdown(userAssets),
     ] as [number, number, number],
   };

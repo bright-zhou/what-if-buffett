@@ -95,14 +95,14 @@ describe('calculateStats', () => {
     expect(stats.maxDrawdown).toHaveLength(3);
 
     // user = buffett initially, so stats should match
-    expect(stats.finalAssets[0]).toBeCloseTo(stats.finalAssets[2]);
-    expect(stats.cagr[0]).toBeCloseTo(stats.cagr[2]);
+    expect(stats.finalAssets[1]).toBeCloseTo(stats.finalAssets[2]);
+    expect(stats.cagr[1]).toBeCloseTo(stats.cagr[2]);
 
     // Verify concrete CAGR: (1.254/1)^(1/3) - 1 ≈ 0.0783
-    expect(stats.cagr[0]).toBeCloseTo(0.0783, 3);
+    expect(stats.cagr[1]).toBeCloseTo(0.0783, 3);
 
     // sp500 CAGR: final asset = 1 * 1.05 * 0.9 * 1.15 = 1.08675
     // (1.08675)^(1/3) - 1 ≈ 0.0282
-    expect(stats.cagr[1]).toBeCloseTo(0.0282, 3);
+    expect(stats.cagr[0]).toBeCloseTo(0.0282, 3);
   });
 });
