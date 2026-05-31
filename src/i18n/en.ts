@@ -21,6 +21,7 @@ const en = {
   'label.user': 'You',
 
   'footer.source': 'Data: Berkshire Hathaway Annual Reports (1965–2025)',
+  'footer.feedback': 'Feedback',
   'footer.quote': '"Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1." — Warren Buffett',
 } as const;
 
