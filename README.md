@@ -2,7 +2,7 @@
 
 拖拽柱状图"篡改历史"，实时观察巴菲特 60 年投资生涯的蝴蝶效应。
 
-→ 在线体验：[待部署后填充]
+→ 在线体验：[what-if-buffett.vercel.app](https://what-if-buffett.vercel.app/)
 
 ## 这是什么
 
@@ -46,6 +46,10 @@ React 19 + TypeScript + Vite + Recharts + Vitest
 ## 数据来源
 
 Berkshire Hathaway Annual Reports (1965–2025)，巴菲特历年致股东信中的年度收益率数据。
+
+## 反馈
+
+有问题、建议或好奇？欢迎到 [GitHub Issues](https://github.com/bright-zhou/what-if-buffett/issues) 一起讨论。
 
 ## License
 

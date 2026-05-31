@@ -6,6 +6,9 @@ export function Footer() {
     <footer style={{ textAlign: 'center', padding: '16px 0', color: '#64748b', fontSize: 12 }}>
       <p style={{ margin: 0 }}>{t('footer.source')}</p>
       <p style={{ margin: '4px 0 0' }}>
+        {t('footer.quote')}
+      </p>
+      <p style={{ margin: '4px 0 0' }}>
         <a
           href="https://github.com/bright-zhou/what-if-buffett/issues"
           target="_blank"
@@ -14,8 +17,6 @@ export function Footer() {
         >
           {t('footer.feedback')}
         </a>
-        {' · '}
-        {t('footer.quote')}
       </p>
     </footer>
   );
