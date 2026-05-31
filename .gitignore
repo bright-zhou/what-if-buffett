@@ -3,5 +3,6 @@ node_modules/
 dist/
 # 内部资料：产品探索、定义、规划设计文件
 docs/superpowers/
+docs/ROADMAP.md
 # 外部资料（非项目文件)
 2025ltr.pdf
