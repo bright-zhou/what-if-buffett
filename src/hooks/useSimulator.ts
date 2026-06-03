@@ -1,27 +1,39 @@
 import { useMemo, useState, useCallback } from 'react';
 import { YEARS } from '../data/buffettData';
 import { calculateAssets, calculateStats } from '../utils/calculate';
+import { DEFAULT_PARAMETERS, applyParameters, type Parameters } from '../parameters/apply';
 import type { SimulationResult } from '../types';
 
-const INITIAL_ASSET = 1; // normalize to $1
+const INITIAL_ASSET = 1;
 const NUM_YEARS = YEARS.length;
 
 export function useSimulator() {
-  const [userReturn, setUserReturn] = useState<number[]>(
+  const [rawReturns, setRawReturns] = useState<number[]>(
     () => YEARS.map(y => y.buffettReturn)
   );
+  const [parameters, setParametersState] = useState<Parameters>(DEFAULT_PARAMETERS);
 
   const updateReturn = useCallback((yearIndex: number, newReturn: number) => {
-    setUserReturn(prev => {
+    setRawReturns(prev => {
       const next = [...prev];
       next[yearIndex] = newReturn;
       return next;
     });
   }, []);
 
-  const resetReturns = useCallback(() => {
-    setUserReturn(YEARS.map(y => y.buffettReturn));
+  const setParameters = useCallback((next: Parameters) => {
+    setParametersState(next);
   }, []);
+
+  const resetAll = useCallback(() => {
+    setRawReturns(YEARS.map(y => y.buffettReturn));
+    setParametersState(DEFAULT_PARAMETERS);
+  }, []);
+
+  const userReturn = useMemo(
+    () => rawReturns.map(r => applyParameters(r, parameters)),
+    [rawReturns, parameters]
+  );
 
   const result = useMemo<SimulationResult>(() => {
     const buffettReturns = YEARS.map(y => y.buffettReturn);
@@ -43,5 +55,5 @@ export function useSimulator() {
     };
   }, [userReturn]);
 
-  return { result, updateReturn, resetReturns };
+  return { result, parameters, updateReturn, setParameters, resetAll };
 }
