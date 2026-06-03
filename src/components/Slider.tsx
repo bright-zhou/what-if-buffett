@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface SliderProps {
   min: number;
@@ -30,23 +30,30 @@ export function Slider({
 }: SliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   const percentage = ((value - min) / (max - min)) * 100;
   const displayValue = format ? format(value) : value.toString();
 
-  const updateFromClientX = useCallback((clientX: number) => {
+  const computeValue = (clientX: number): number | null => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track) return null;
     const rect = track.getBoundingClientRect();
     const ratio = clamp((clientX - rect.left) / rect.width, 0, 1);
     const raw = min + ratio * (max - min);
-    onChange(clamp(roundToStep(raw, step, min), min, max));
-  }, [min, max, step, onChange]);
+    return clamp(roundToStep(raw, step, min), min, max);
+  };
 
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       if (!draggingRef.current) return;
-      updateFromClientX(e.clientX);
+      const track = trackRef.current;
+      if (!track) return;
+      const rect = track.getBoundingClientRect();
+      const ratio = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+      const raw = min + ratio * (max - min);
+      onChangeRef.current(clamp(roundToStep(raw, step, min), min, max));
     };
     const handleUp = () => { draggingRef.current = false; };
     document.addEventListener('mousemove', handleMove);
@@ -55,11 +62,12 @@ export function Slider({
       document.removeEventListener('mousemove', handleMove);
       document.removeEventListener('mouseup', handleUp);
     };
-  }, [updateFromClientX]);
+  }, [min, max, step]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     draggingRef.current = true;
-    updateFromClientX(e.clientX);
+    const next = computeValue(e.clientX);
+    if (next !== null) onChange(next);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
