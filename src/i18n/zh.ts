@@ -23,6 +23,7 @@ const zh = {
   'footer.source': '数据来源: Berkshire Hathaway Annual Reports (1965-2025)',
   'footer.feedback': '反馈建议',
   'footer.quote': '"投资第一条规则：不要亏钱。第二条规则：永远记住第一条。" — Warren Buffett',
+
   'param.friction': '摩擦成本',
   'param.leverage': '杠杆倍数',
   'param.reset': '重置参数',
