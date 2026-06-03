@@ -2,7 +2,7 @@
 
 拖拽柱状图"篡改历史"，实时观察巴菲特 60 年投资生涯的蝴蝶效应。
 
-→ 在线体验：[what-if-buffett.vercel.app](https://what-if-buffett.vercel.app/)
+→ 在线体验：[whatifbuffett.wozai.online](https://whatifbuffett.wozai.online/)
 
 *[English](README.en.md)*
 

@@ -2,7 +2,7 @@
 
 Drag the bars to rewrite history — see the butterfly effect across Warren Buffett's 60-year investment journey.
 
-→ Live: [what-if-buffett.vercel.app](https://what-if-buffett.vercel.app/)
+→ Live: [whatifbuffett.wozai.online](https://whatifbuffett.wozai.online/)
 
 *[中文](README.md)*
 
