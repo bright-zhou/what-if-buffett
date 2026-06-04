@@ -1,6 +1,6 @@
 import { useSimulator } from './hooks/useSimulator';
 import { Header } from './components/Header';
-import { ParameterPanel } from './components/ParameterPanel';
+import { ParameterControls } from './components/ParameterControls';
 import { Legend } from './components/Legend';
 import { ChartArea } from './components/ChartArea';
 import { SummaryCards } from './components/SummaryCards';
@@ -13,7 +13,7 @@ export default function App() {
   return (
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px' }}>
       <Header onReset={resetAll} />
-      <ParameterPanel
+      <ParameterControls
         parameters={parameters}
         onChange={setParameters}
         onReset={resetAll}
