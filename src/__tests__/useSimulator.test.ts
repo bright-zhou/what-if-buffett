@@ -43,7 +43,7 @@ describe('useSimulator', () => {
       result.current.setParameters({ leverage: 2, friction: 0 });
       result.current.updateReturn(0, 0.5);
     });
-    // userReturn[0] = applyParameters(0.5, {L=2, f=0}) = 2*1.5 - 2 = 1.0
+    // userReturn[0] = applyParameters(0.5, {L=2, f=0}) = 2 * (0.5 - 0) = 1.0
     expect(result.current.result.userReturn[0]).toBeCloseTo(1.0);
     expect(result.current.parameters).toEqual({ leverage: 2, friction: 0 });
   });
