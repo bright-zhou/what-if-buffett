@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  Legend, ResponsiveContainer, Cell,
+  Legend, ResponsiveContainer, Cell, ReferenceLine,
 } from 'recharts';
 import type { YearData } from '../types';
 import { useLang } from '../i18n/LanguageContext';
+import { calcReturnDomain, calcReturnTicks } from '../utils/chartAxis';
 
 const MIN_VISIBLE_YEARS = 1;
 
 interface CombinedChartProps {
   years: YearData[];
+  rawReturns: number[];
   userReturn: number[];
   buffettAsset: number[];
   sp500Asset: number[];
@@ -30,7 +32,7 @@ interface DraggableBarProps {
   width?: number;
   height?: number;
   index?: number;
-  onDragStart?: (index: number, clientY: number) => void;
+  onDragStart?: (index: number, clientX: number, clientY: number) => void;
   fill?: string;
 }
 
@@ -58,7 +60,8 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{
       lineHeight: 1.4,
     }}>
       <div style={{
-        color: '#e2e8f0', fontWeight: 600, fontSize: 13,
+        color: '#e2e8f0', fontWeight: 600, fontSize: 14,
+        letterSpacing: '-0.01em',
         marginBottom: 8, paddingBottom: 6,
         borderBottom: '1px solid #334155',
       }}>
@@ -67,9 +70,9 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{
       <table style={{ borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ textAlign: 'left', fontWeight: 400, color: '#64748b', fontSize: 10, paddingBottom: 4, width: 60 }} />
-            <th style={{ textAlign: 'right', fontWeight: 400, color: '#64748b', fontSize: 10, paddingBottom: 4, width: 58 }}>Return</th>
-            <th style={{ textAlign: 'right', fontWeight: 400, color: '#64748b', fontSize: 10, paddingBottom: 4, width: 76 }}>Asset</th>
+            <th style={{ textAlign: 'left', fontWeight: 400, color: '#94a3b8', fontSize: 11, paddingBottom: 4, width: 60 }} />
+            <th style={{ textAlign: 'right', fontWeight: 400, color: '#94a3b8', fontSize: 11, paddingBottom: 4, width: 58 }}>Return</th>
+            <th style={{ textAlign: 'right', fontWeight: 400, color: '#94a3b8', fontSize: 11, paddingBottom: 4, width: 76 }}>Asset</th>
           </tr>
         </thead>
         <tbody>
@@ -107,15 +110,17 @@ function DraggableBar(props: DraggableBarProps) {
       fill={fill}
       style={{ cursor: 'ns-resize' }}
       onMouseDown={onDragStart ? (e: React.MouseEvent) => {
-        e.stopPropagation();
-        onDragStart(index!, e.clientY);
+        // Do NOT stopPropagation: the chartArea pan handler already filters
+        // out target.tagName === 'rect', and outside-click listeners (e.g.
+        // ParameterControls dropdown close) need the event to bubble to document.
+        onDragStart(index!, e.clientX, e.clientY);
       } : undefined}
     />
   );
 }
 
 export function CombinedChart({
-  years, userReturn, buffettAsset, sp500Asset, userAsset, onBarDrag,
+  years, rawReturns, userReturn, buffettAsset, sp500Asset, userAsset, onBarDrag,
 }: CombinedChartProps) {
   const { t } = useLang();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -159,26 +164,14 @@ export function CombinedChart({
     .filter((_, i) => i % tickInterval === 0)
     .map(d => d.year);
 
-  // Y-axis left domain auto-adapts to visible return range
-  const returnDomain = useMemo(() => {
-    const returns = visibleData.flatMap(d => [d.buffettReturn, d.sp500Return, d.userReturn]);
-    const min = Math.min(...returns);
-    const max = Math.max(...returns);
-    const pad = 0.08;
-    const lo = Math.max(-1, Math.floor((min - pad) * 10) / 10);
-    const hi = Math.min(2, Math.ceil((max + pad) * 10) / 10);
-    return [lo, hi] as [number, number];
-  }, [visibleData]);
+  // Y-axis left domain auto-adapts to visible return range.
+  // Hi is no longer hard-capped at 2; leverage 3x can push userReturn to 6.0.
+  const returnDomain = useMemo(
+    () => calcReturnDomain(visibleData.flatMap(d => [d.buffettReturn, d.sp500Return, d.userReturn])),
+    [visibleData],
+  );
 
-  const returnTicks = useMemo(() => {
-    const [lo, hi] = returnDomain;
-    const step = (hi - lo) > 1.5 ? 0.2 : (hi - lo) > 0.8 ? 0.1 : 0.05;
-    const ticks: number[] = [];
-    for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) {
-      ticks.push(Math.round(v * 100) / 100);
-    }
-    return ticks;
-  }, [returnDomain]);
+  const returnTicks = useMemo(() => calcReturnTicks(returnDomain), [returnDomain]);
 
   // Drag state: index of bar being dragged, current value, and mouse position
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -311,15 +304,19 @@ export function CombinedChart({
     return () => window.removeEventListener('keydown', handler);
   }, [years.length]);
 
-  const handleDragStart = useCallback((visibleIndex: number, clientY: number) => {
+  const handleDragStart = useCallback((visibleIndex: number, clientX: number, clientY: number) => {
     // Map visible index back to original data index
     const index = visibleDomain[0] + visibleIndex;
-    const initialReturn = userReturn[index];
+    // Drag operates on raw return (the value the user "sets"). When leverage
+    // or friction is non-default, the bar will jump to its effective value
+    // after release — this is intentional educational feedback about how
+    // parameters amplify outcomes (e.g. leverage 2x + raw -50% → effective -100%).
+    const initialReturn = rawReturns[index];
     currentValueRef.current = initialReturn;
     dragRef.current = { index, startY: clientY, initialReturn };
     setDragIndex(index);
     setDragValue(initialReturn);
-    setMousePos({ x: 0, y: clientY });
+    setMousePos({ x: clientX, y: clientY });
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragRef.current) return;
@@ -351,7 +348,7 @@ export function CombinedChart({
     // Attach listeners to document to track drag across the entire page.
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [userReturn, onBarDrag, visibleDomain]);
+  }, [rawReturns, onBarDrag, visibleDomain]);
 
   return (
     <div
@@ -364,8 +361,8 @@ export function CombinedChart({
         userSelect: 'none',
       }}
     >
-      <div ref={chartAreaRef} style={{ cursor: 'grab', width: '100%', height: 450 }}>
-        <ResponsiveContainer width="100%" height={450}>
+      <div ref={chartAreaRef} style={{ cursor: 'grab', width: '100%', height: 520 }}>
+        <ResponsiveContainer width="100%" height={520}>
           <ComposedChart data={visibleData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
 
@@ -428,6 +425,52 @@ export function CombinedChart({
           <Line dataKey="buffettAsset" yAxisId="right" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
           <Line dataKey="sp500Asset" yAxisId="right" stroke="#64748b" strokeWidth={1.5} dot={false} isAnimationActive={false} />
           <Line dataKey="userAsset" yAxisId="right" stroke="#f59e0b" strokeWidth={2} dot={false} isAnimationActive={false} />
+
+          {/* Horizontal reference line during drag: shows the raw return value
+              the user is targeting. White 1px dashed line stays subtle; label
+              renders as a boxed tag at the plot area's left edge so it doesn't
+              overlap the line itself. */}
+          {dragIndex !== null && (
+            <ReferenceLine
+              yAxisId="left"
+              y={dragValue}
+              stroke="#ffffff"
+              strokeDasharray="4 4"
+              strokeWidth={1}
+              isFront
+              label={(props: { viewBox?: { x?: number; y?: number } }) => {
+                const vb = props.viewBox;
+                if (!vb || vb.x === undefined || vb.y === undefined) return <g />;
+                const text = `${(dragValue * 100).toFixed(1)}%`;
+                const padH = 6;
+                const padV = 3;
+                const charW = 7.2;
+                const w = text.length * charW + padH * 2;
+                const h = 12 + padV * 2;
+                // Place tag to the LEFT of the plot area, so it sits next to
+                // the Y-axis (outside the chart's drawing region). The opaque
+                // background masks any overlap with Y-axis tick labels.
+                const rectX = vb.x - w - 4;
+                const rectY = vb.y - h / 2;
+                return (
+                  <g pointerEvents="none">
+                    <rect
+                      x={rectX} y={rectY} width={w} height={h}
+                      fill="#0f172a" stroke="#ffffff" strokeWidth={1} rx={3}
+                    />
+                    <text
+                      x={rectX + w / 2} y={vb.y}
+                      textAnchor="middle" dominantBaseline="central"
+                      fill="#ffffff" fontSize={12} fontWeight={600}
+                      style={{ fontVariantNumeric: 'tabular-nums' }}
+                    >
+                      {text}
+                    </text>
+                  </g>
+                );
+              }}
+            />
+          )}
         </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -443,7 +486,7 @@ export function CombinedChart({
           borderRadius: 6,
           padding: '4px 8px',
           color: '#f59e0b',
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: 600,
           pointerEvents: 'none',
           zIndex: 1000,

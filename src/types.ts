@@ -15,6 +15,7 @@ export interface Stats {
 
 export interface SimulationResult {
   years: YearData[];
+  rawReturns: number[];
   userReturn: number[];
   buffettAsset: number[];
   sp500Asset: number[];

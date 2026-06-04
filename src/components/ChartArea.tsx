@@ -11,6 +11,7 @@ export function ChartArea({ result, onBarDrag }: ChartAreaProps) {
     <div style={{ background: '#1e293b', borderRadius: 12, padding: 16 }}>
       <CombinedChart
         years={result.years}
+        rawReturns={result.rawReturns}
         userReturn={result.userReturn}
         buffettAsset={result.buffettAsset}
         sp500Asset={result.sp500Asset}

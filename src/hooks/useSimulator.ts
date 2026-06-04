@@ -47,13 +47,14 @@ export function useSimulator() {
 
     return {
       years: [...YEARS],
+      rawReturns,
       userReturn,
       buffettAsset: buffettAssets.slice(1),
       sp500Asset: sp500Assets.slice(1),
       userAsset: userAssets.slice(1),
       stats,
     };
-  }, [userReturn]);
+  }, [rawReturns, userReturn]);
 
   return { result, parameters, updateReturn, setParameters, resetAll };
 }

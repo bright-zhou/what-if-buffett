@@ -48,6 +48,17 @@ describe('useSimulator', () => {
     expect(result.current.parameters).toEqual({ leverage: 2, friction: 0 });
   });
 
+  it('exposes rawReturns separately from userReturn (leverage diverges them)', () => {
+    const { result } = renderHook(() => useSimulator());
+    act(() => {
+      result.current.setParameters({ leverage: 2, friction: 0 });
+      result.current.updateReturn(0, 0.3);
+    });
+    // rawReturns reflects what the user set; userReturn is the leveraged projection.
+    expect(result.current.result.rawReturns[0]).toBeCloseTo(0.3);
+    expect(result.current.result.userReturn[0]).toBeCloseTo(0.6); // 2 * (0.3 - 0)
+  });
+
   it('resetAll clears both rawReturns and parameters', () => {
     const { result } = renderHook(() => useSimulator());
     act(() => {
