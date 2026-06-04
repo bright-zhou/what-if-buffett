@@ -13,12 +13,21 @@ export default function App() {
   return (
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 20px' }}>
       <Header onReset={resetAll} />
-      <ParameterControls
-        parameters={parameters}
-        onChange={setParameters}
-        onReset={resetAll}
-      />
-      <Legend />
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 16,
+        padding: '8px 0',
+        position: 'relative',
+      }}>
+        <Legend />
+        <ParameterControls
+          parameters={parameters}
+          onChange={setParameters}
+          onReset={resetAll}
+        />
+      </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
         <div style={{ flex: '1 1 0', minWidth: 0 }}>
           <ChartArea result={result} onBarDrag={updateReturn} />
