@@ -7,7 +7,6 @@ import type { Parameters } from '../parameters/apply';
 interface ParameterControlsProps {
   parameters: Parameters;
   onChange: (next: Parameters) => void;
-  onReset: () => void;
 }
 
 const formatFriction = (v: number) => `${(v * 100).toFixed(1)}%`;
@@ -34,10 +33,12 @@ function ParamButtonWithDropdown({
     background: active ? '#475569' : '#334155',
     color: '#e2e8f0',
     border: `1px solid ${active ? '#f59e0b' : '#475569'}`,
-    padding: '6px 12px',
+    padding: '3px 10px',
     borderRadius: 4,
     cursor: 'pointer',
-    font: 'inherit',
+    fontSize: 14,
+    whiteSpace: 'nowrap',
+    transition: 'background 0.15s, border-color 0.15s',
   };
   return (
     <div style={{ position: 'relative' }}>
@@ -46,6 +47,12 @@ function ParamButtonWithDropdown({
         onClick={onClick}
         aria-expanded={active}
         style={buttonStyle}
+        onMouseEnter={e => {
+          if (!active) e.currentTarget.style.background = '#3f4a5b';
+        }}
+        onMouseLeave={e => {
+          if (!active) e.currentTarget.style.background = '#334155';
+        }}
       >
         {label} {value}
       </button>
@@ -54,7 +61,7 @@ function ParamButtonWithDropdown({
   );
 }
 
-export function ParameterControls({ parameters, onChange, onReset }: ParameterControlsProps) {
+export function ParameterControls({ parameters, onChange }: ParameterControlsProps) {
   const { t } = useLang();
   const [openKey, setOpenKey] = useState<OpenKey>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,7 +95,9 @@ export function ParameterControls({ parameters, onChange, onReset }: ParameterCo
   return (
     <div
       ref={containerRef}
-      style={{ display: 'flex', gap: 8, alignItems: 'center' }}
+      // marginRight = SummaryCards width (210) + chart-row gap (16),
+      // so the leverage button's right edge aligns with the chart's right edge.
+      style={{ display: 'flex', gap: 8, alignItems: 'center', marginRight: 226 }}
     >
       <ParamButtonWithDropdown
         label={frictionLabel}
@@ -106,12 +115,11 @@ export function ParameterControls({ parameters, onChange, onReset }: ParameterCo
               background: '#1e293b',
               border: '1px solid #334155',
               borderRadius: 4,
-              padding: 12,
+              padding: '24px 14px',
               zIndex: 10,
             }}
           >
             <Slider
-              orientation="vertical"
               min={FRICTION_RANGE.min}
               max={FRICTION_RANGE.max}
               step={FRICTION_RANGE.step}
@@ -141,12 +149,11 @@ export function ParameterControls({ parameters, onChange, onReset }: ParameterCo
               background: '#1e293b',
               border: '1px solid #334155',
               borderRadius: 4,
-              padding: 12,
+              padding: '24px 14px',
               zIndex: 10,
             }}
           >
             <Slider
-              orientation="vertical"
               min={LEVERAGE_RANGE.min}
               max={LEVERAGE_RANGE.max}
               step={LEVERAGE_RANGE.step}
@@ -159,22 +166,6 @@ export function ParameterControls({ parameters, onChange, onReset }: ParameterCo
           </div>
         )}
       </ParamButtonWithDropdown>
-
-      <button
-        type="button"
-        onClick={onReset}
-        style={{
-          background: '#334155',
-          color: '#e2e8f0',
-          border: '1px solid #475569',
-          padding: '6px 12px',
-          borderRadius: 4,
-          cursor: 'pointer',
-          font: 'inherit',
-        }}
-      >
-        {t('param.reset')}
-      </button>
     </div>
   );
 }

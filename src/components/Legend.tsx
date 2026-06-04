@@ -10,7 +10,7 @@ export function Legend() {
   return (
     <div style={{ display: 'flex', gap: 20, justifyContent: 'center', padding: '8px 0' }}>
       {items.map(item => (
-        <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+        <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
           <div style={{ width: 12, height: 12, borderRadius: 2, background: item.color }} />
           {item.label}
         </div>

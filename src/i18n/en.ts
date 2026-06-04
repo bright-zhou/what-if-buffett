@@ -26,7 +26,6 @@ const en = {
 
   'param.friction': 'Friction Cost',
   'param.leverage': 'Leverage',
-  'param.reset': 'Reset Parameters',
 } as const;
 
 export default en;

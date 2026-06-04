@@ -26,7 +26,6 @@ const zh = {
 
   'param.friction': '摩擦成本',
   'param.leverage': '杠杆倍数',
-  'param.reset': '重置参数',
 } as const;
 
 export default zh;

@@ -29,17 +29,16 @@ describe('ParameterControls', () => {
     setLang('zh');
   });
 
-  it('renders 3 buttons: friction, leverage, reset', () => {
+  it('renders 2 buttons: friction, leverage', () => {
     render(
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     expect(screen.getByRole('button', { name: /摩擦成本/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /杠杆倍数/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /重置参数/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /重置参数/ })).not.toBeInTheDocument();
   });
 
   it('friction button shows current value formatted as percentage', () => {
@@ -47,7 +46,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={{ leverage: 1, friction: 0.025 }}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     expect(screen.getByRole('button', { name: /2\.5%/ })).toBeInTheDocument();
@@ -58,7 +56,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={{ leverage: 2, friction: 0 }}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     expect(screen.getByRole('button', { name: /2\.0x/ })).toBeInTheDocument();
@@ -69,7 +66,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     expect(screen.queryByRole('slider')).not.toBeInTheDocument();
@@ -80,7 +76,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: /摩擦成本/ }));
@@ -93,7 +88,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     const frictionBtn = screen.getByRole('button', { name: /摩擦成本/ });
@@ -108,7 +102,6 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: /摩擦成本/ }));
@@ -126,7 +119,6 @@ describe('ParameterControls', () => {
         <ParameterControls
           parameters={defaultParams}
           onChange={() => {}}
-          onReset={() => {}}
         />
       </div>
     );
@@ -137,25 +129,11 @@ describe('ParameterControls', () => {
     expect(screen.queryByRole('slider')).not.toBeInTheDocument();
   });
 
-  it('reset button calls onReset', () => {
-    const onReset = vi.fn();
-    render(
-      <ParameterControls
-        parameters={defaultParams}
-        onChange={() => {}}
-        onReset={onReset}
-      />
-    );
-    fireEvent.click(screen.getByRole('button', { name: /重置参数/ }));
-    expect(onReset).toHaveBeenCalledTimes(1);
-  });
-
   it('dropdown is rendered inside a position: relative parent (anchored to button)', () => {
     render(
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: /摩擦成本/ }));
@@ -180,13 +158,12 @@ describe('ParameterControls', () => {
       <ParameterControls
         parameters={defaultParams}
         onChange={() => {}}
-        onReset={() => {}}
       />
     );
     expect(screen.getByRole('button', { name: /Friction Cost/ })).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Leverage/ })
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Reset Parameters/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Reset Parameters/ })).not.toBeInTheDocument();
   });
 });

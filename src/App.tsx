@@ -25,7 +25,6 @@ export default function App() {
         <ParameterControls
           parameters={parameters}
           onChange={setParameters}
-          onReset={resetAll}
         />
       </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
