@@ -15,7 +15,7 @@ const TRACK_HEIGHT = 4;
 const THUMB_SIZE = 16;
 const TRACK_LENGTH = 220;
 const TICK_DOT_SIZE = 4;
-const TRACK_TO_LABEL_GAP = 8;
+const TRACK_TO_LABEL_GAP = 12;
 const TICK_LABEL_FONT = 12;
 const TICK_COL_WIDTH = 40;
 
@@ -106,7 +106,7 @@ export function Slider({
     top: `calc(${percentage}% - ${THUMB_SIZE / 2}px)`,
     left: '50%', transform: 'translateX(-50%)',
     width: THUMB_SIZE, height: THUMB_SIZE, borderRadius: '50%',
-    background: '#f59e0b', border: '2px solid #1e293b',
+    background: '#f59e0b', border: '2px solid rgba(255,255,255,0.7)',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)', cursor: 'grab',
   };
   const tickColumnStyle: CSSProperties = {
