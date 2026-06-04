@@ -135,9 +135,7 @@ describe('Slider - vertical orientation', () => {
       <Slider {...verticalProps} value={0} onChange={onChange} orientation="vertical" />
     );
     // The track is the first child div of the wrapper (the one with mouseDown handler).
-    // We grab it by walking: the slider (thumb) parent -> the track div.
-    const thumb = screen.getByRole('slider');
-    const track = thumb.parentElement as HTMLElement;
+    const track = screen.getByTestId('slider-track');
     // Stub the bounding rect: 200px tall, top at 0
     vi.spyOn(track, 'getBoundingClientRect').mockReturnValue({
       top: 0,

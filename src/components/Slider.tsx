@@ -37,9 +37,6 @@ export function Slider({
   onChangeRef.current = onChange;
   const isVertical = orientation === 'vertical';
 
-  const percentage = ((value - min) / (max - min)) * 100;
-  const displayValue = format ? format(value) : value.toString();
-
   const computeValue = (clientAxis: number): number | null => {
     const track = trackRef.current;
     if (!track) return null;
@@ -50,18 +47,17 @@ export function Slider({
     const raw = min + ratio * (max - min);
     return clamp(roundToStep(raw, step, min), min, max);
   };
+  const computeValueRef = useRef(computeValue);
+  computeValueRef.current = computeValue;
+
+  const percentage = ((value - min) / (max - min)) * 100;
+  const displayValue = format ? format(value) : value.toString();
 
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       if (!draggingRef.current) return;
-      const track = trackRef.current;
-      if (!track) return;
-      const rect = track.getBoundingClientRect();
-      const ratio = isVertical
-        ? clamp((e.clientY - rect.top) / rect.height, 0, 1)
-        : clamp((e.clientX - rect.left) / rect.width, 0, 1);
-      const raw = min + ratio * (max - min);
-      onChangeRef.current(clamp(roundToStep(raw, step, min), min, max));
+      const next = computeValueRef.current(isVertical ? e.clientY : e.clientX);
+      if (next !== null) onChangeRef.current(next);
     };
     const handleUp = () => { draggingRef.current = false; };
     document.addEventListener('mousemove', handleMove);
@@ -131,6 +127,7 @@ export function Slider({
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
           <div
             ref={trackRef}
+            data-testid="slider-track"
             onMouseDown={handleMouseDown}
             style={trackStyle}
           >
@@ -182,6 +179,7 @@ export function Slider({
       </div>
       <div
         ref={trackRef}
+        data-testid="slider-track"
         onMouseDown={handleMouseDown}
         style={{
           position: 'relative',
