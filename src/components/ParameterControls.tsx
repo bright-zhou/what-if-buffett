@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useLang } from '../i18n/LanguageContext';
 import { Slider } from './Slider';
 import { FRICTION_RANGE, LEVERAGE_RANGE } from '../parameters/ranges';
@@ -14,6 +14,45 @@ const formatFriction = (v: number) => `${(v * 100).toFixed(1)}%`;
 const formatLeverage = (v: number) => `${v.toFixed(1)}x`;
 
 type OpenKey = 'friction' | 'leverage' | null;
+
+interface ParamButtonWithDropdownProps {
+  label: string;
+  value: string;
+  active: boolean;
+  onClick: () => void;
+  children?: ReactNode;
+}
+
+function ParamButtonWithDropdown({
+  label,
+  value,
+  active,
+  onClick,
+  children,
+}: ParamButtonWithDropdownProps) {
+  const buttonStyle: CSSProperties = {
+    background: active ? '#475569' : '#334155',
+    color: '#e2e8f0',
+    border: `1px solid ${active ? '#f59e0b' : '#475569'}`,
+    padding: '6px 12px',
+    borderRadius: 4,
+    cursor: 'pointer',
+    font: 'inherit',
+  };
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-expanded={active}
+        style={buttonStyle}
+      >
+        {label} {value}
+      </button>
+      {children}
+    </div>
+  );
+}
 
 export function ParameterControls({ parameters, onChange, onReset }: ParameterControlsProps) {
   const { t } = useLang();
@@ -43,103 +82,83 @@ export function ParameterControls({ parameters, onChange, onReset }: ParameterCo
     setOpenKey(prev => (prev === 'leverage' ? null : 'leverage'));
   };
 
-  const renderButton = (
-    key: 'friction' | 'leverage',
-    label: string,
-    formatted: string,
-    onClick: () => void,
-  ) => {
-    const isOpen = openKey === key;
-    const buttonStyle: CSSProperties = {
-      background: isOpen ? '#475569' : '#334155',
-      color: '#e2e8f0',
-      border: `1px solid ${isOpen ? '#f59e0b' : '#475569'}`,
-      padding: '6px 12px',
-      borderRadius: 4,
-      cursor: 'pointer',
-      font: 'inherit',
-    };
-    return (
-      <div style={{ position: 'relative' }}>
-        <button
-          type="button"
-          onClick={onClick}
-          aria-expanded={isOpen}
-          style={buttonStyle}
-        >
-          {label} {formatted}
-        </button>
-      </div>
-    );
-  };
-
   const frictionLabel = t('param.friction');
   const leverageLabel = t('param.leverage');
-  const frictionFormatted = formatFriction(parameters.friction);
-  const leverageFormatted = formatLeverage(parameters.leverage);
 
   return (
     <div
       ref={containerRef}
       style={{ display: 'flex', gap: 8, alignItems: 'center' }}
     >
-      {renderButton('friction', frictionLabel, frictionFormatted, handleFrictionClick)}
-      {openKey === 'friction' && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            marginTop: 4,
-            background: '#1e293b',
-            border: '1px solid #334155',
-            borderRadius: 4,
-            padding: 12,
-            zIndex: 10,
-          }}
-        >
-          <Slider
-            orientation="vertical"
-            min={FRICTION_RANGE.min}
-            max={FRICTION_RANGE.max}
-            step={FRICTION_RANGE.step}
-            value={parameters.friction}
-            onChange={v => onChange({ ...parameters, friction: v })}
-            snapPoints={FRICTION_RANGE.snapPoints}
-            format={formatFriction}
-            ariaLabel={frictionLabel}
-          />
-        </div>
-      )}
+      <ParamButtonWithDropdown
+        label={frictionLabel}
+        value={formatFriction(parameters.friction)}
+        active={openKey === 'friction'}
+        onClick={handleFrictionClick}
+      >
+        {openKey === 'friction' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              marginTop: 4,
+              background: '#1e293b',
+              border: '1px solid #334155',
+              borderRadius: 4,
+              padding: 12,
+              zIndex: 10,
+            }}
+          >
+            <Slider
+              orientation="vertical"
+              min={FRICTION_RANGE.min}
+              max={FRICTION_RANGE.max}
+              step={FRICTION_RANGE.step}
+              value={parameters.friction}
+              onChange={v => onChange({ ...parameters, friction: v })}
+              snapPoints={FRICTION_RANGE.snapPoints}
+              format={formatFriction}
+              ariaLabel={frictionLabel}
+            />
+          </div>
+        )}
+      </ParamButtonWithDropdown>
 
-      {renderButton('leverage', leverageLabel, leverageFormatted, handleLeverageClick)}
-      {openKey === 'leverage' && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            marginTop: 4,
-            background: '#1e293b',
-            border: '1px solid #334155',
-            borderRadius: 4,
-            padding: 12,
-            zIndex: 10,
-          }}
-        >
-          <Slider
-            orientation="vertical"
-            min={LEVERAGE_RANGE.min}
-            max={LEVERAGE_RANGE.max}
-            step={LEVERAGE_RANGE.step}
-            value={parameters.leverage}
-            onChange={v => onChange({ ...parameters, leverage: v })}
-            snapPoints={LEVERAGE_RANGE.snapPoints}
-            format={formatLeverage}
-            ariaLabel={leverageLabel}
-          />
-        </div>
-      )}
+      <ParamButtonWithDropdown
+        label={leverageLabel}
+        value={formatLeverage(parameters.leverage)}
+        active={openKey === 'leverage'}
+        onClick={handleLeverageClick}
+      >
+        {openKey === 'leverage' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              marginTop: 4,
+              background: '#1e293b',
+              border: '1px solid #334155',
+              borderRadius: 4,
+              padding: 12,
+              zIndex: 10,
+            }}
+          >
+            <Slider
+              orientation="vertical"
+              min={LEVERAGE_RANGE.min}
+              max={LEVERAGE_RANGE.max}
+              step={LEVERAGE_RANGE.step}
+              value={parameters.leverage}
+              onChange={v => onChange({ ...parameters, leverage: v })}
+              snapPoints={LEVERAGE_RANGE.snapPoints}
+              format={formatLeverage}
+              ariaLabel={leverageLabel}
+            />
+          </div>
+        )}
+      </ParamButtonWithDropdown>
 
       <button
         type="button"

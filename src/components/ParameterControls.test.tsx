@@ -150,6 +150,30 @@ describe('ParameterControls', () => {
     expect(onReset).toHaveBeenCalledTimes(1);
   });
 
+  it('dropdown is rendered inside a position: relative parent (anchored to button)', () => {
+    render(
+      <ParameterControls
+        parameters={defaultParams}
+        onChange={() => {}}
+        onReset={() => {}}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: /摩擦成本/ }));
+    const slider = screen.getByRole('slider');
+    // Find the dropdown wrapper: walk up from the slider until we find the
+    // element with position: absolute that is also the slider's first
+    // positioned ancestor above the Slider's own internal wrappers.
+    let node: HTMLElement | null = slider;
+    while (node && !(node.style.position === 'absolute' && node.style.top === '100%')) {
+      node = node.parentElement;
+    }
+    expect(node).not.toBeNull();
+    const dropdownWrapper = node as HTMLElement;
+    expect(dropdownWrapper).toHaveStyle({ position: 'absolute', top: '100%' });
+    const buttonWrapper = dropdownWrapper.parentElement as HTMLElement;
+    expect(buttonWrapper).toHaveStyle({ position: 'relative' });
+  });
+
   it('English: friction button label uses English text', () => {
     setLang('en');
     render(
