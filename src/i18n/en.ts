@@ -1,7 +1,14 @@
 const en = {
   'app.title': 'What If Buffett',
+  'app.titleTagline': "Rewrite Buffett's 60-Year Investing Legacy",
   'app.subtitle': 'Drag the bars to rewrite history — see the butterfly effect across Buffett\'s 60-year journey',
   'app.reset': 'Reset',
+
+  'hint.drag': "Drag bars to modify a year's return",
+  'hint.dblclick': 'Double-click to reset a year',
+  'hint.wheel': 'Scroll to zoom time range',
+  'hint.pan': 'Drag empty area to pan',
+  'hint.arrow': '←→ arrow keys to pan',
 
   'legend.buffett': 'Buffett Actual',
   'legend.sp500': 'S&P 500',

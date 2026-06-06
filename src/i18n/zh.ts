@@ -1,7 +1,14 @@
 const zh = {
   'app.title': 'What If Buffett',
+  'app.titleTagline': '改写巴菲特 60 年投资史',
   'app.subtitle': '拖拽柱子"篡改历史"，看巴菲特 60 年投资生涯的蝴蝶效应',
   'app.reset': '重置',
+
+  'hint.drag': '拖动柱子修改该年收益率',
+  'hint.dblclick': '双击柱子重置单年',
+  'hint.wheel': '滚轮缩放时间区间',
+  'hint.pan': '拖动空白处平移',
+  'hint.arrow': '←→ 移动时间区间',
 
   'legend.buffett': '巴菲特实际',
   'legend.sp500': '标普500',

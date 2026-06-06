@@ -33,6 +33,7 @@ interface DraggableBarProps {
   height?: number;
   index?: number;
   onDragStart?: (index: number, clientX: number, clientY: number) => void;
+  onDblClickReset?: (index: number) => void;
   fill?: string;
 }
 
@@ -97,7 +98,7 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{
 // Recharts Bar's onMouseDown does not pass the native event with clientY,
 // so we must use a custom SVG rect with native onMouseDown.
 function DraggableBar(props: DraggableBarProps) {
-  const { x, y, width, height, index, onDragStart, fill } = props;
+  const { x, y, width, height, index, onDragStart, onDblClickReset, fill } = props;
   // Recharts computes height = baseValueScale - currentValueScale.
   // For negative returns, height is negative. SVG <rect> needs positive
   // height, so we swap y to the bottom and take absolute value.
@@ -115,6 +116,7 @@ function DraggableBar(props: DraggableBarProps) {
         // ParameterControls dropdown close) need the event to bubble to document.
         onDragStart(index!, e.clientX, e.clientY);
       } : undefined}
+      onDoubleClick={onDblClickReset ? () => onDblClickReset(index!) : undefined}
     />
   );
 }
@@ -350,6 +352,16 @@ export function CombinedChart({
     document.addEventListener('mouseup', handleMouseUp);
   }, [rawReturns, onBarDrag, visibleDomain]);
 
+  // Double-click a bar to reset that year to Buffett's original return.
+  // Reuses onBarDrag to keep a single source of truth for rawReturns updates.
+  const handleBarDblClick = useCallback((visibleIndex: number) => {
+    const dataIndex = visibleDomain[0] + visibleIndex;
+    const original = years[dataIndex]?.buffettReturn;
+    if (original !== undefined) {
+      onBarDrag(dataIndex, original);
+    }
+  }, [visibleDomain, years, onBarDrag]);
+
   return (
     <div
       ref={containerRef}
@@ -409,7 +421,7 @@ export function CombinedChart({
           <Bar
             dataKey="userReturn"
             yAxisId="left"
-            shape={<DraggableBar onDragStart={handleDragStart} />}
+            shape={<DraggableBar onDragStart={handleDragStart} onDblClickReset={handleBarDblClick} />}
             legendType="none"
             isAnimationActive={false}
           >
