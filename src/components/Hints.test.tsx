@@ -14,7 +14,7 @@ const { langRef, setLang } = vi.hoisted(() => {
   };
 });
 
-vi.mock('../i18n/LanguageContext', () => ({
+vi.mock('../i18n/useLang', () => ({
   useLang: () => ({
     lang: langRef.current,
     t: (key: string) =>

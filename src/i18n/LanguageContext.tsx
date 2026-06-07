@@ -1,18 +1,13 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, useMemo, type ReactNode } from 'react';
 import type { Language, TranslationKey } from './index';
 import { translations } from './index';
+import { LanguageContext, type LanguageContextType } from './useLang';
 
-interface LanguageContextType {
-  lang: Language;
-  t: (key: TranslationKey) => string;
-  toggleLang: () => void;
-}
-
-const LanguageContext = createContext<LanguageContextType | null>(null);
+const STORAGE_KEY = 'whatif-lang';
 
 function getInitialLang(): Language {
   try {
-    const stored = localStorage.getItem('whatif-lang');
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'en' || stored === 'zh') return stored;
   } catch { /* localStorage unavailable */ }
   return 'zh';
@@ -26,20 +21,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const toggleLang = useCallback(() => {
     setLang(prev => {
       const next = prev === 'zh' ? 'en' : 'zh';
-      try { localStorage.setItem('whatif-lang', next); } catch { /* */ }
+      try { localStorage.setItem(STORAGE_KEY, next); } catch { /* localStorage unavailable */ }
       return next;
     });
   }, []);
 
+  const value = useMemo<LanguageContextType>(
+    () => ({ lang, t, toggleLang }),
+    [lang, t, toggleLang],
+  );
+
   return (
-    <LanguageContext.Provider value={{ lang, t, toggleLang }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
-}
-
-export function useLang() {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error('useLang must be used within LanguageProvider');
-  return ctx;
 }

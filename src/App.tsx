@@ -7,7 +7,7 @@ import { ChartArea } from './components/ChartArea';
 import { Hints } from './components/Hints';
 import { SummaryCards } from './components/SummaryCards';
 import { Footer } from './components/Footer';
-import { useLang } from './i18n/LanguageContext';
+import { useLang } from './i18n/useLang';
 import './App.css';
 
 export default function App() {
