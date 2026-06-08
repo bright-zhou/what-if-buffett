@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,31 +10,69 @@
     <link rel="preconnect" href="https://plausible.io" />
 
     <title>What If Buffett</title>
-    <meta name="description" content="拖拽柱状图修改巴菲特1965-2025年任意一年收益率，即时重算后续所有资产变化。三条曲线对比：巴菲特实际 vs 标普500 vs 你的假设。感受复利的蝴蝶效应。" />
+    <meta name="description" content="Drag bars to rewrite Warren Buffett's 1965-2025 annual returns. Instantly see the butterfly effect of compounding. Compare three curves: Buffett actual, S&P 500, and your scenario." />
     <meta name="keywords" content="巴菲特, 投资模拟器, 复利, 收益率, 标普500, 蝴蝶效应, Warren Buffett, compounding, investment simulator" />
 
     <!-- Open Graph (Facebook, LinkedIn, Telegram, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://whatifbuffett.wozai.online/" />
-    <meta property="og:title" content="What If Buffett — 拖拽柱子改写投资史" />
-    <meta property="og:description" content="拖拽修改巴菲特任意一年收益率，实时观察60年复利的蝴蝶效应。三条曲线对比：巴菲特实际 vs 标普500 vs 你的假设。" />
+    <meta property="og:title" content="What If Buffett — Rewrite Buffett's 60-Year Investing Legacy" />
+    <meta property="og:description" content="Drag bars to rewrite Warren Buffett's 1965-2025 annual returns. Instantly see the butterfly effect of compounding. Compare three curves: Buffett actual, S&P 500, and your scenario." />
     <meta property="og:image" content="https://whatifbuffett.wozai.online/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
     <meta property="og:site_name" content="What If Buffett" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="What If Buffett — 改写巴菲特 60 年投资史" />
-    <meta name="twitter:description" content="拖拽修改巴菲特任意一年收益率，实时观察60年复利的蝴蝶效应。三条曲线对比。" />
+    <meta name="twitter:title" content="What If Buffett — Rewrite Buffett's 60-Year Investing Legacy" />
+    <meta name="twitter:description" content="Drag bars to rewrite Warren Buffett's 1965-2025 annual returns. Instantly see the butterfly effect of compounding. Compare three curves: Buffett actual, S&P 500, and your scenario." />
     <meta name="twitter:image" content="https://whatifbuffett.wozai.online/og-image.png" />
 
-    <!-- hreflang (同一页面支持 zh/en 切换) -->
-    <link rel="alternate" hreflang="zh" href="https://whatifbuffett.wozai.online/" />
+    <!-- hreflang (primary: en, alternate: zh, x-default: canonical) -->
     <link rel="alternate" hreflang="en" href="https://whatifbuffett.wozai.online/" />
+    <link rel="alternate" hreflang="zh" href="https://whatifbuffett.wozai.online/" />
+    <link rel="alternate" hreflang="x-default" href="https://whatifbuffett.wozai.online/" />
     <link rel="canonical" href="https://whatifbuffett.wozai.online/" />
+
+    <!-- JSON-LD: WebApplication Schema (出海英文 SEO: 让 Google 识别为应用类富卡片) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "What If Buffett",
+      "alternateName": "沃伦巴菲特投资模拟器",
+      "url": "https://whatifbuffett.wozai.online/",
+      "description": "Drag bars to rewrite Warren Buffett's 1965-2025 annual returns. Instantly see the butterfly effect of compounding. Compare three curves: Buffett actual, S&P 500, and your scenario.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any modern web browser",
+      "browserRequirements": "Requires JavaScript and HTML5 canvas support",
+      "inLanguage": ["en-US", "zh-CN"],
+      "image": "https://whatifbuffett.wozai.online/og-image.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "author": {
+        "@type": "Person",
+        "name": "bright-zhou",
+        "url": "https://github.com/bright-zhou"
+      },
+      "featureList": [
+        "Drag-to-modify annual returns",
+        "Real-time compound recalculation",
+        "S&P 500 benchmark comparison",
+        "Bilingual UI (Chinese & English)",
+        "61 years of Berkshire Hathaway data (1965-2025)",
+        "Statistics: final value, CAGR, profitable years, max drawdown"
+      ]
+    }
+    </script>
 
     <!-- Plausible Analytics -->
     <script defer data-domain="whatifbuffett.wozai.online" src="https://plausible.io/js/script.js"></script>

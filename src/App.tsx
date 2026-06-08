@@ -21,6 +21,7 @@ export default function App() {
   // og:locale is zh_CN primary.
   useEffect(() => {
     document.title = `${t('app.title')} — ${t('app.titleTagline')}`;
+    document.documentElement.lang = lang;
   }, [lang, t]);
 
   return (
