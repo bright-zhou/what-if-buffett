@@ -8,19 +8,19 @@ Drag the bars to rewrite history — see the butterfly effect across Warren Buff
 
 ## What Is This
 
-An interactive investment simulator. It displays Warren Buffett's actual annual returns from 1965 to 2025 (61 years). **Drag any bar** on the chart to change a year's return, and the system instantly recalculates all subsequent asset values — revealing the power of compounding and how a single decision reshapes the final outcome.
+An interactive investment simulator. It displays Warren Buffett's actual annual returns from 1965 to 2025 (61 years). **Drag bars to change returns, adjust friction cost and leverage** — the system recalculates instantly, revealing the power of compounding and how a single decision reshapes the final outcome.
 
 Three curves, side by side:
 
-- **Buffett Actual** (blue) — his real returns
+- **Buffett Actual** (blue) — Buffett's real returns
 - **S&P 500** (gray) — the benchmark
 - **Your Scenario** (orange) — your alternate universe
 
-## Why This Exists
+## Use Cases
 
 - Understand compounding: "What if Buffett lost 50% in the 1970s?"
-- See the cost of fees: "How much does a 2% annual management fee eat away over 60 years?"
-- Test your intuition: "If you removed the worst years, how much richer would you be?"
+- Quantify fee drag: "How much does a 2% annual fee eat away over 60 years?"
+- See leverage's double edge: "Does 2x leverage speed up compounding — or amplify the crash?"
 
 ## Data
 
