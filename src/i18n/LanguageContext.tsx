@@ -7,7 +7,7 @@ const STORAGE_KEY = 'whatif-lang';
 
 // Outbound-first: default 'en' aligns with og:locale=en_US primary and
 // hreflang en primary. First-time visitors (incl. Googlebot) see English.
-// Localized users (zh toggle persisted) are preserved.
+// Returning users keep their stored lang preference.
 function getInitialLang(): Language {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);

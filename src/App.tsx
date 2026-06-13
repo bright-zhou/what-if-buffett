@@ -14,11 +14,9 @@ export default function App() {
   const { result, parameters, updateReturn, setParameters, resetAll } = useSimulator();
   const { lang, t } = useLang();
 
-  // i18n-aware document title: static <title> in index.html stays brand-only
-  // ("What If Buffett") as a language-neutral fallback. Once React mounts we
-  // append the language-appropriate tagline so tab title and on-page language
-  // are aligned. og:title / twitter:title stay English (outbound-first);
-  // og:locale is en_US primary with zh_CN as alternate.
+  // i18n-aware: append lang-appropriate tagline to <title> and sync <html lang>
+  // so tab title, on-page language, and AT all stay aligned. og:title /
+  // og:locale stay English (outbound-first for SEO); zh_CN is alternate.
   useEffect(() => {
     document.title = `${t('app.title')} — ${t('app.titleTagline')}`;
     document.documentElement.lang = lang;
