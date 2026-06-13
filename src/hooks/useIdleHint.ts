@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const DEFAULT_THRESHOLD_MS = 60_000;
+const DEFAULT_THRESHOLD_MS = 30_000;
 const DEFAULT_STORAGE_KEY = 'p0b2d.idleHintShown';
 
 interface UseIdleHintOptions {

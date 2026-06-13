@@ -16,26 +16,26 @@ describe('useIdleHint', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it('test 1: first visit + 60s no interaction → shouldBreath=true, localStorage set', () => {
+  it('test 1: first visit + 30s no interaction → shouldBreath=true, localStorage set', () => {
     const { result } = renderHook(() => useIdleHint());
     expect(result.current.shouldBreath).toBe(false);
-    act(() => { vi.advanceTimersByTime(60_000); });
+    act(() => { vi.advanceTimersByTime(30_000); });
     expect(result.current.shouldBreath).toBe(true);
     expect(localStorage.getItem('p0b2d.idleHintShown')).toBe('1');
   });
 
-  it('test 2: reset() before trigger → timer resets, no trigger within 60s', () => {
+  it('test 2: reset() before trigger → timer resets, no trigger within 30s', () => {
     const { result } = renderHook(() => useIdleHint());
-    act(() => { vi.advanceTimersByTime(30_000); });
+    act(() => { vi.advanceTimersByTime(15_000); });
     act(() => { result.current.reset(); });
-    act(() => { vi.advanceTimersByTime(30_000); });
+    act(() => { vi.advanceTimersByTime(15_000); });
     expect(result.current.shouldBreath).toBe(false);
     expect(localStorage.getItem('p0b2d.idleHintShown')).toBeNull();
   });
 
   it('test 3: reset() after trigger → shouldBreath=false (animation stops)', () => {
     const { result } = renderHook(() => useIdleHint());
-    act(() => { vi.advanceTimersByTime(60_000); });
+    act(() => { vi.advanceTimersByTime(30_000); });
     expect(result.current.shouldBreath).toBe(true);
     act(() => { result.current.reset(); });
     expect(result.current.shouldBreath).toBe(false);
@@ -46,7 +46,7 @@ describe('useIdleHint', () => {
     localStorage.setItem('p0b2d.idleHintShown', '1');
     const { result } = renderHook(() => useIdleHint());
     expect(result.current.shouldBreath).toBe(false);
-    act(() => { vi.advanceTimersByTime(120_000); });
+    act(() => { vi.advanceTimersByTime(60_000); });
     expect(result.current.shouldBreath).toBe(false);
   });
 
@@ -54,14 +54,14 @@ describe('useIdleHint', () => {
     const matchMediaMock = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() });
     window.matchMedia = matchMediaMock;
     const { result } = renderHook(() => useIdleHint());
-    act(() => { vi.advanceTimersByTime(60_000); });
+    act(() => { vi.advanceTimersByTime(30_000); });
     expect(result.current.shouldBreath).toBe(false);
     expect(localStorage.getItem('p0b2d.idleHintShown')).toBeNull();
   });
 
   it('test 6: unmount clears timer (no orphan setTimeout)', () => {
     const { unmount } = renderHook(() => useIdleHint());
-    act(() => { vi.advanceTimersByTime(30_000); });
+    act(() => { vi.advanceTimersByTime(15_000); });
     unmount();
     // If timer leaked, advancing would throw "Cannot advance timer after unmount"
     // or trigger callback. Here we just verify no throw and no shouldBreath flip.
@@ -70,14 +70,14 @@ describe('useIdleHint', () => {
 
   it('test 7: rapid reset() calls do not stack timers (last call wins)', () => {
     const { result } = renderHook(() => useIdleHint());
-    act(() => { vi.advanceTimersByTime(50_000); });
+    act(() => { vi.advanceTimersByTime(25_000); });
     act(() => { result.current.reset(); });
-    act(() => { vi.advanceTimersByTime(50_000); });
+    act(() => { vi.advanceTimersByTime(25_000); });
     act(() => { result.current.reset(); });
-    // 110s elapsed since mount, but two resets mean trigger should be 60s after last reset
-    act(() => { vi.advanceTimersByTime(10_000); });
+    // 55s elapsed since mount, but two resets mean trigger should be 30s after last reset
+    act(() => { vi.advanceTimersByTime(5_000); });
     expect(result.current.shouldBreath).toBe(false);
-    act(() => { vi.advanceTimersByTime(50_000); });
+    act(() => { vi.advanceTimersByTime(25_000); });
     expect(result.current.shouldBreath).toBe(true);
   });
 
