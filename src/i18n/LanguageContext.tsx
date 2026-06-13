@@ -5,12 +5,15 @@ import { LanguageContext, type LanguageContextType } from './useLang';
 
 const STORAGE_KEY = 'whatif-lang';
 
+// Outbound-first: default 'en' aligns with og:locale=en_US primary and
+// hreflang en primary. First-time visitors (incl. Googlebot) see English.
+// Localized users (zh toggle persisted) are preserved.
 function getInitialLang(): Language {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'en' || stored === 'zh') return stored;
   } catch { /* localStorage unavailable */ }
-  return 'zh';
+  return 'en';
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {

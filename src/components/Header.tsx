@@ -25,6 +25,15 @@ export function Header({ onReset }: HeaderProps) {
         </button>
       </div>
       <h1 style={{ margin: 0, fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em' }}>{t('app.title')}</h1>
+      <h2
+        style={{
+          position: 'absolute',
+          width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden',
+          clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0,
+        }}
+      >
+        {t('app.valueProp')}
+      </h2>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 4 }}>
         <p style={{ margin: 0, color: '#94a3b8', fontSize: 14, letterSpacing: '-0.01em' }}>
           {t('app.subtitle')}

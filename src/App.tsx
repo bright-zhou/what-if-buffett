@@ -17,8 +17,8 @@ export default function App() {
   // i18n-aware document title: static <title> in index.html stays brand-only
   // ("What If Buffett") as a language-neutral fallback. Once React mounts we
   // append the language-appropriate tagline so tab title and on-page language
-  // are aligned. og:title / twitter:title remain static Chinese since
-  // og:locale is zh_CN primary.
+  // are aligned. og:title / twitter:title stay English (outbound-first);
+  // og:locale is en_US primary with zh_CN as alternate.
   useEffect(() => {
     document.title = `${t('app.title')} — ${t('app.titleTagline')}`;
     document.documentElement.lang = lang;

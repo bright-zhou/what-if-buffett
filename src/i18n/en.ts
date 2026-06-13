@@ -2,6 +2,7 @@ const en = {
   'app.title': 'What If Buffett',
   'app.titleTagline': "Rewrite Buffett's 60-Year Investing Legacy",
   'app.subtitle': 'Drag the bars to rewrite history — see the butterfly effect across Buffett\'s 60-year journey',
+  'app.valueProp': 'Test the impact of management fees, leverage, and 2x drawdowns on Warren Buffett\'s 1965–2025 returns. Compare your scenario to the S&P 500 and Buffett Actual.',
   'app.reset': 'Reset',
 
   'hint.drag': "Drag bars to modify a year's return",
