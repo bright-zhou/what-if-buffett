@@ -39,7 +39,6 @@ export function Header({ onReset, shouldBreath = false }: HeaderProps) {
       </h2>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 4 }}>
         <p
-          className={shouldBreath ? 'breathing' : undefined}
           style={{
             margin: 0,
             color: '#94a3b8',
