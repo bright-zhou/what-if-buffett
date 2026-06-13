@@ -1,8 +1,11 @@
 import { useLang } from '../i18n/useLang';
 
-interface HeaderProps { onReset: () => void }
+interface HeaderProps {
+  onReset: () => void;
+  shouldBreath?: boolean;
+}
 
-export function Header({ onReset }: HeaderProps) {
+export function Header({ onReset, shouldBreath = false }: HeaderProps) {
   const { t, lang, toggleLang } = useLang();
 
   return (
@@ -35,7 +38,17 @@ export function Header({ onReset }: HeaderProps) {
         {t('app.valueProp')}
       </h2>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 4 }}>
-        <p style={{ margin: 0, color: '#94a3b8', fontSize: 14, letterSpacing: '-0.01em' }}>
+        <p
+          className={shouldBreath ? 'breathing' : undefined}
+          style={{
+            margin: 0,
+            color: '#94a3b8',
+            fontSize: 14,
+            letterSpacing: '-0.01em',
+            animation: shouldBreath ? 'subtitle-breathing 2.4s ease-in-out infinite' : undefined,
+            transition: 'opacity 0.2s ease',
+          }}
+        >
           {t('app.subtitle')}
         </p>
         <button onClick={onReset} style={{
