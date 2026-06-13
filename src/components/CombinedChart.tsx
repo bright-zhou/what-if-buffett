@@ -17,6 +17,7 @@ interface CombinedChartProps {
   sp500Asset: number[];
   userAsset: number[];
   onBarDrag: (yearIndex: number, newReturn: number) => void;
+  onTimeNavigate?: () => void;
 }
 
 interface ChartDataPoint extends YearData {
@@ -122,7 +123,7 @@ function DraggableBar(props: DraggableBarProps) {
 }
 
 export function CombinedChart({
-  years, rawReturns, userReturn, buffettAsset, sp500Asset, userAsset, onBarDrag,
+  years, rawReturns, userReturn, buffettAsset, sp500Asset, userAsset, onBarDrag, onTimeNavigate,
 }: CombinedChartProps) {
   const { t } = useLang();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -234,11 +235,12 @@ export function CombinedChart({
       newStart = Math.max(0, Math.min(years.length - newSpan, newStart));
 
       setVisibleDomain([newStart, newStart + newSpan - 1]);
+      onTimeNavigate?.();
     };
 
     el.addEventListener('wheel', handler, { passive: false });
     return () => el.removeEventListener('wheel', handler);
-  }, [years.length]);
+  }, [years.length, onTimeNavigate]);
 
   // Pan: drag chart background to scroll horizontally through years
   const panRef = useRef<{ startX: number; startDomain: [number, number] } | null>(null);
@@ -268,6 +270,7 @@ export function CombinedChart({
       let newStart = panRef.current.startDomain[0] - yearShift;
       newStart = Math.max(0, Math.min(years.length - span, newStart));
       setVisibleDomain([newStart, newStart + span - 1]);
+      onTimeNavigate?.();
     };
 
     const handleMouseUp = () => {
@@ -279,7 +282,7 @@ export function CombinedChart({
 
     chartArea.addEventListener('mousedown', handleMouseDown);
     return () => chartArea.removeEventListener('mousedown', handleMouseDown);
-  }, [years.length]);
+  }, [years.length, onTimeNavigate]);
 
   // Keyboard pan: left/right arrow keys shift visible domain
   useEffect(() => {
@@ -299,12 +302,13 @@ export function CombinedChart({
 
       if (newStart !== start) {
         setVisibleDomain([newStart, newStart + span - 1]);
+        onTimeNavigate?.();
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [years.length]);
+  }, [years.length, onTimeNavigate]);
 
   const handleDragStart = useCallback((visibleIndex: number, clientX: number, clientY: number) => {
     // Map visible index back to original data index

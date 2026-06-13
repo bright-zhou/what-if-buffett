@@ -4,9 +4,10 @@ import type { SimulationResult } from '../types';
 interface ChartAreaProps {
   result: SimulationResult;
   onBarDrag: (yearIndex: number, newReturn: number) => void;
+  onTimeNavigate?: () => void;
 }
 
-export function ChartArea({ result, onBarDrag }: ChartAreaProps) {
+export function ChartArea({ result, onBarDrag, onTimeNavigate }: ChartAreaProps) {
   return (
     <div style={{ background: '#1e293b', borderRadius: 12, padding: 16 }}>
       <CombinedChart
@@ -17,6 +18,7 @@ export function ChartArea({ result, onBarDrag }: ChartAreaProps) {
         sp500Asset={result.sp500Asset}
         userAsset={result.userAsset}
         onBarDrag={onBarDrag}
+        onTimeNavigate={onTimeNavigate}
       />
     </div>
   );
